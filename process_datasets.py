@@ -8,6 +8,11 @@ import math
 import os
 import re
 import uuid
+import random
+import nltk
+from nltk import word_tokenize 
+from nltk.corpus import stopwords
+from nltk.util import ngrams
 
 EXTRACT_DATA = "data/recipe_raw.tsv"
 MODELS = "models/"
@@ -36,7 +41,6 @@ def analyze_model():
 
     with open(EXTRACT_DATA, 'r') as fpr:
         for row in fpr:
-            
             split_ = row.split('\t')
             uuid = split_[0]
             dish_name = split_[2]
@@ -46,8 +50,7 @@ def analyze_model():
             flavors = split_[6]
             nutrition = split_[7]
             images = split_[8]
-            attributes = split_[9]
-            uuid_dish.append((uuid, dish_name, ingredients, range, time, flavors, nutrition, images, attributes))
+            uuid_dish.append((uuid, dish_name, ingredients, rating, time, flavors, nutrition, images))
 
             # name
             name_ = re.sub(r'[\{\}\(\)\[\]-_,\'\"\.”“‘’–]', '', dish_name)
@@ -68,13 +71,12 @@ def analyze_model():
     numpy.save(MODELS+NAMES_COUNTER_NPY, names_counter)
     numpy.save(MODELS+UUID_DISH_NPY, uuid_dish)
 
-
-
 def read_model():
     names_model = numpy.load(MODELS+NAMES_COUNTER_NPY)
     uuid_dish_model = numpy.load(MODELS+UUID_DISH_NPY)
     name_obj = dict()
     uuid_dish = dict()
+    bigram_dish = dict()
 
     for uuid_to_dish in uuid_dish_model:
         uuid = uuid_to_dish[0]
@@ -86,9 +88,14 @@ def read_model():
                     "time" : uuid_to_dish[4],
                     "flavors" : uuid_to_dish[5],
                     "nutrition" : uuid_to_dish[6],
-                    "images" : uuid_to_dish[7],
-                    "attributes" : uuid_to_dish[8],
+                    "images" : uuid_to_dish[7]
                 }
+
+        token = nltk.word_tokenize(uuid_dish[uuid]["name"].lower())
+        bigram = list(ngrams(token, 2)) 
+        for bg in bigram:
+            if bg not in bigram_dish: bigram_dish[bg] = []
+            bigram_dish[bg].append(uuid)
 
     for name_freq_map in names_model:
         name = name_freq_map[0]
@@ -100,16 +107,31 @@ def read_model():
         else:
             raise ValueError("Same value in names to likelihood model")
 
-    return name_obj, uuid_dish
+    return name_obj, uuid_dish, bigram_dish
 
-def predict(string, name_obj, uuid_dish):
+def predict(string, name_obj, uuid_dish, bigram_dish):
     
-    search_dish = string
+    search_dish = string.lower()
+    tokenized_search_dish = search_dish.split()
     all_dishes = []
     dish_count = dict()
-    for word in search_dish.lower().split():
-        if word in blacklist: continue
 
+    token = nltk.word_tokenize(search_dish)
+    bigram = list(ngrams(token, 2)) 
+
+    found_dishes = list()
+
+    for bg in bigram:
+        if len(set(bg) - blacklist) != len(bg): 
+            bigram_index += 1
+            continue
+
+        if bg in bigram_dish:
+            for dish_uuid in bigram_dish[bg]:
+                ingredients = re.split(r'\', \'' , re.sub(r'(\[\'|\'\])', '', uuid_dish[dish_uuid]["ingredients"]) )
+                found_dishes.append({"name": uuid_dish[dish_uuid]["name"], "ingredients": ingredients})
+
+    for word in tokenized_search_dish:
         if word in name_obj:
             print("Word: {} Score: {}".format(word, name_obj[word]['score']))
             all_dishes.append((name_obj[word]['score'],name_obj[word]['dishes']))
@@ -117,10 +139,9 @@ def predict(string, name_obj, uuid_dish):
             for dish in name_obj[word]['dishes']:
                 if dish not in dish_count: dish_count[dish] = 0
                 dish_count[dish] += 1
-
         else:
             print("{} doesn't exist".format(word))
-
+        
     all_dishes.sort(key=lambda x: x[0], reverse=True)
 
     print("Number of possible dishes: {}".format(len(dish_count)))
@@ -137,11 +158,19 @@ def predict(string, name_obj, uuid_dish):
     for dish_data, ed_score in dish_score[:3]:
         name = dish_data["name"]
         ingredients = re.split(r'\', \'' , re.sub(r'(\[\'|\'\])', '', dish_data["ingredients"]) )
-    
+        #images = json.loads(dish_data['images'])
+        found_dishes.append({"name": name, "ingredients": ingredients})
+
+    print("Finding: ", string)
+
+    #print(found_dishes)
+    chosen_dish = random.choice(found_dishes)
+
     return {
-        'name': name,
-        'ingredients': ingredients
+        'name': chosen_dish["name"],
+        'ingredients': chosen_dish["ingredients"]
     }
+    
 
 # https://stackoverflow.com/questions/2460177/edit-distance-in-python
 def edit_distance(s1, s2):
@@ -171,5 +200,5 @@ if args.a:
 else:
     print("Skipping reanalyzing model...")
 
-name_obj, uuid_dish = read_model()
-print(predict("Chicken masala", name_obj, uuid_dish))
+name_obj, uuid_dish, bigram_dish = read_model()
+print(predict("rosemary deep fried porkchops", name_obj, uuid_dish, bigram_dish))
