@@ -1,3 +1,5 @@
 uuid_dish.npy
 names_counter.npy
-raw_data.tsv
+recipe_raw.tsv*
+__pycache__/*
+.idea/
