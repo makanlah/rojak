@@ -2,11 +2,11 @@
 
 download the raw dataset using this:
 
-`curl https://transfer.sh/YnprZ/recipe_raw_data -o recipe_raw.txt`
+`mkdir data && curl https://transfer.sh/YnprZ/recipe_raw_data -o data/recipe_raw.txt`
 
 go back to cari-makan-ni and run the following to generate the models:
 
-`mkdir data models`
+`mkdir models`
 
 `python process_datasets.py -a` (only use -a when you need to update the models)
 
