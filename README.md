@@ -12,3 +12,13 @@ go back to cari-makan-ni and run the following to generate the models:
 
 # How to share files online (using transfer.sh)
 `curl --upload-file raw_data.tsv https://transfer.sh/recipe_raw_data`
+
+# To run the API endpoint:
+`python3 foodRequest.py`
+
+# In Postman:
+Do curl http://localhost:5000/todo/api/v1.0/recipes/
+Add Body sample:
+{
+"content":"fried noodles"
+}
