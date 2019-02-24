@@ -9,7 +9,7 @@ import os
 import re
 import uuid
 
-EXTRACT_DATA = "data/raw_data.tsv"
+EXTRACT_DATA = "data/recipe_raw.tsv"
 MODELS = "models/"
 NAMES_COUNTER_NPY = "names_counter.npy"
 UUID_DISH_NPY = "uuid_dish.npy"

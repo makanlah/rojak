@@ -2,7 +2,7 @@
 
 download the raw dataset using this:
 
-`mkdir data && curl https://transfer.sh/YnprZ/recipe_raw_data -o data/recipe_raw.txt`
+`mkdir data && curl https://transfer.sh/YnprZ/recipe_raw_data -o data/recipe_raw.tsv`
 
 go back to cari-makan-ni and run the following to generate the models:
 
