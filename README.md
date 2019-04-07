@@ -6,7 +6,7 @@
 
 ## Install + Setup
 
-`./setup.sh`
+`./setup.sh -s` (use `-h` for more info on available options)
 
 ## Build a new model
 
