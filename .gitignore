@@ -3,3 +3,6 @@ names_counter.npy
 recipe_raw.tsv*
 __pycache__/*
 .idea/
+data/
+.vscode/
+models/

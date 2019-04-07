@@ -1,24 +1,33 @@
-# First thing to do:
+# Cari Makan-ni
 
-download the raw dataset using this:
+## Requirement(s)
 
-`mkdir data && curl https://transfer.sh/YnprZ/recipe_raw_data -o data/recipe_raw.tsv`
+- python3 (and pip)
 
-go back to cari-makan-ni and run the following to generate the models:
+## Install + Setup
 
-`mkdir models`
+`./setup.sh`
 
-`python process_datasets.py -a` (only use -a when you need to update the models)
+## Build a new model
 
-# How to share files online (using transfer.sh)
+`python3 process_datasets.py -a` (only use -a when you need to update the models)
+
+## Share files online (using transfer.sh)
+
 `curl --upload-file raw_data.tsv https://transfer.sh/recipe_raw_data`
 
-# To run the API endpoint:
+## Run the API endpoint
+
 `python3 foodRequest.py`
 
-# In Postman:
-Do curl http://localhost:5000/todo/api/v1.0/recipes/
+## Test in Postman
+
+`curl http://localhost:5000/todo/api/v1.0/recipes/`
+
 Add Body sample:
+
+```json
 {
-"content":"fried noodles"
+    "content":"fried noodles"
 }
+```
