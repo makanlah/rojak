@@ -16,17 +16,36 @@ function checkPythonVersion () {
     esac
 }
 
+function checkPIPVersion () {
+    case "$($1 --version 6>&1)" in
+    *" 3."*)
+        return 1
+        ;;
+    *)
+        return 0
+        ;;
+    esac
+}
+
 function main () {
-    correct_version=`checkPythonVersion $python_command`
     if checkPythonVersion $python_command; then
         python_command="python3"
-        pip_command="pip3"
         if checkPythonVersion $python_command; then
             echo "Python3 not found."
             exit 1
         fi
         echo "Using python3 instead of python"
     fi
+
+    if checkPIPVersion $pip_command; then
+        pip_command="pip3"
+        if checkPIPVersion $pip_command; then
+            echo "pip for Python3 not found."
+            exit 1
+        fi
+        echo "Using pip3 instead of pip"
+    fi
+
     $pip_command install -r requirements.txt
 }
 
@@ -65,20 +84,18 @@ while getopts :fhsx: opt; do
     case $opt in
         f)
             full
-            exit 0
             ;;
         h)
             help
-            exit 0
             ;;
         s)
             short
-            exit 0
             ;;
         * )
             error "Invalid option: -$OPTARG" >&2
             ;;
     esac
+    exit 0
 done
 
 error "Missing option"
