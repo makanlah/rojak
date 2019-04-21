@@ -4,21 +4,16 @@ RED='\033[0;31m'
 NC='\033[0m'
 python_command="python"
 pip_command="pip"
+version="3"
 
-function checkPythonVersion () {
-    case "$($1 --version 2>&1)" in
-    *" 3."*)
-        return 1
-        ;;
-    *)
-        return 0
-        ;;
-    esac
-}
+# This should be updated to some url in a domain
+# where we host this ourselves in the future.
+data_url="https://transfer.sh/V7mkg/recipe_raw.tsv"
+uuid_url="https://transfer.sh/SkuTv/uuid_dish.npy"
 
-function checkPIPVersion () {
-    case "$($1 --version 6>&1)" in
-    *" 3."*)
+function checkVersion () {
+    case "$($1 --version)" in
+    *"ython $version."*)
         return 1
         ;;
     *)
@@ -28,39 +23,39 @@ function checkPIPVersion () {
 }
 
 function main () {
-    if checkPythonVersion $python_command; then
+    if checkVersion $python_command; then
         python_command="python3"
-        if checkPythonVersion $python_command; then
-            echo "Python3 not found."
+        if checkVersion $python_command; then
+            echo "Python 3 not found."
             exit 1
         fi
         echo "Using python3 instead of python"
     fi
 
-    if checkPIPVersion $pip_command; then
+    if checkVersion $pip_command; then
         pip_command="pip3"
-        if checkPIPVersion $pip_command; then
-            echo "pip for Python3 not found."
+        if checkVersion $pip_command; then
+            echo "pip for Python 3 not found."
             exit 1
         fi
         echo "Using pip3 instead of pip"
     fi
 
-    $pip_command install -r requirements.txt
+    # $pip_command install -r requirements.txt
 }
 
 function full () {
     echo -e "Running the ${RED}full${NC} setup (including building the model)"
     main
     mkdir data
-    curl https://transfer.sh/V7mkg/recipe_raw.tsv -o data/recipe_raw.tsv
+    curl $data_url -o data/recipe_raw.tsv
     $python_command process_datasets.py -a
 }
 
 function short () {
     echo -e "Running the ${RED}short${NC} setup (reuse existing model)"
     main
-    curl https://transfer.sh/SkuTv/uuid_dish.npy -o models/uuid_dish.npy
+    curl $uuid_url -o models/uuid_dish.npy
     # missing url for names_counter.npy
     $python_command process_datasets.py
 }
@@ -80,7 +75,10 @@ function error () {
     exit 1
 }
 
+option="false"
+
 while getopts :fhsx: opt; do
+    option="true"
     case $opt in
         f)
             full
@@ -95,7 +93,10 @@ while getopts :fhsx: opt; do
             error "Invalid option: -$OPTARG" >&2
             ;;
     esac
-    exit 0
 done
+
+if [ $option == "true" ]; then
+    exit 0
+fi
 
 error "Missing option"
