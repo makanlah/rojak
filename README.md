@@ -2,7 +2,7 @@
 
 ## Requirement(s)
 
-- python3 (and pip)
+- python3 (and pip3)
 
 ## Install + Setup
 
