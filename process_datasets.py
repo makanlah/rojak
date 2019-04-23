@@ -10,6 +10,7 @@ import re
 import uuid
 import random
 import nltk
+nltk.download('punkt')
 from nltk import word_tokenize 
 from nltk.corpus import stopwords
 from nltk.util import ngrams
