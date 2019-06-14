@@ -8,8 +8,7 @@ version="3"
 
 # This should be updated to some url in a domain
 # where we host this ourselves in the future.
-data_url="https://transfer.sh/V7mkg/recipe_raw.tsv"
-uuid_url="https://transfer.sh/SkuTv/uuid_dish.npy"
+data_url="https://0x0.st/zQIn.csv"
 
 function checkVersion () {
     case "$($1 --version)" in
@@ -41,14 +40,14 @@ function main () {
         echo "Using pip3 instead of pip"
     fi
 
-    # $pip_command install -r requirements.txt
+    $pip_command install -r requirements.txt
 }
 
 function full () {
     echo -e "Running the ${RED}full${NC} setup (including building the model)"
     main
     mkdir data
-    curl $data_url -o data/recipe_raw.tsv
+    curl $data_url -o data/kaggle_epi_dataset.csv
     $python_command process_datasets.py -a
 }
 

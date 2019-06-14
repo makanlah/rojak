@@ -1,4 +1,4 @@
-# Cari Makan-ni
+# Rojak
 
 ## Requirement(s)
 
@@ -12,9 +12,9 @@
 
 `python3 process_datasets.py -a` (only use -a when you need to update the models)
 
-## Share files online (using transfer.sh)
+## Share files online (using https://0x0.st/)
 
-`curl --upload-file raw_data.tsv https://transfer.sh/recipe_raw_data`
+`curl -F 'file=@kaggle_epi_dataset.csv' https:/0x0.st`
 
 ## Run the API endpoint
 
