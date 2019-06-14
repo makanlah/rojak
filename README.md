@@ -8,12 +8,6 @@
 
 `./setup.sh -s` (use `-h` for more info on available options)
 
-## Share files online (using https://0x0.st/)
-
-`curl -F 'file=@kaggle_epi_dataset.csv' https:/0x0.st`
-Returns a url to download it: `https://0x0.st/zQIn.csv`
-To download: simply do `curl https://0x0.st/zQIn.csv -o [output file name]`
-
 ## Run the API endpoint
 
 `python3 foodRequest.py`
@@ -26,14 +20,17 @@ Add Body sample:
 
 ```json
 {
-    "content":"fried noodles"
+    "content": "fried noodles"
 }
 ```
 
 ## To test Rojak Search manually
+
 ```python
-from Rojak import Rojak
-rojak = Rojak()
+from RojakCore import KnowledgeGraph
+rojak = KnowledgeGraph()
 rojak.search("spicy curry chicken with vegetable")
 ```
-Returns array with at max 10 dishes `[...]`
+
+Returns array of 10 recipes `[...]`
+
