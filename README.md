@@ -8,13 +8,11 @@
 
 `./setup.sh -s` (use `-h` for more info on available options)
 
-## Build a new model
-
-`python3 process_datasets.py -a` (only use -a when you need to update the models)
-
 ## Share files online (using https://0x0.st/)
 
 `curl -F 'file=@kaggle_epi_dataset.csv' https:/0x0.st`
+Returns a url to download it: `https://0x0.st/zQIn.csv`
+To download: simply do `curl https://0x0.st/zQIn.csv -o [output file name]`
 
 ## Run the API endpoint
 
@@ -32,7 +30,7 @@ Add Body sample:
 }
 ```
 
-## To test it manually
+## To test Rojak Search manually
 `from Rojak import Rojak`
 `rojak = Rojak()`
 `rojak.search("spicy curry chicken with vegetable")`
