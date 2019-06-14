@@ -31,3 +31,9 @@ Add Body sample:
     "content":"fried noodles"
 }
 ```
+
+## To test it manually
+`from Rojak import Rojak`
+`rojak = Rojak()`
+`rojak.search("spicy curry chicken with vegetable")`
+Returns array with at max 10 dishes `[...]`
