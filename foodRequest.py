@@ -5,12 +5,11 @@ from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-from process_datasets import *
+
+from Rojak import Rojak
+rojak = Rojak()
 
 app = Flask(__name__)
-
-#read from the model
-name_obj, uuid_dish, bigram_dish = read_model()
 
 @app.route('/todo/api/v1.0/recipes/', methods=['POST'])
 @cross_origin()
@@ -21,8 +20,7 @@ def get_data():
         print("Error! No content found!")
         abort(404)
 
-    #function from process_datasets
-    task = predict(name, name_obj, uuid_dish, bigram_dish)
+    task = rojak.search(name) 
     if len(task) == 0:
         abort(404)
     return jsonify(task)
