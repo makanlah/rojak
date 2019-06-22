@@ -31,7 +31,9 @@ Add Body sample:
 ```
 
 ## To test Rojak Search manually
-`from Rojak import Rojak`
-`rojak = Rojak()`
-`rojak.search("spicy curry chicken with vegetable")`
+```python
+from Rojak import Rojak
+rojak = Rojak()
+rojak.search("spicy curry chicken with vegetable")
+```
 Returns array with at max 10 dishes `[...]`
