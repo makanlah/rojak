@@ -1,4 +1,4 @@
-# Cari Makan-ni
+# Rojak
 
 ## Requirement(s)
 
@@ -8,13 +8,11 @@
 
 `./setup.sh -s` (use `-h` for more info on available options)
 
-## Build a new model
+## Share files online (using https://0x0.st/)
 
-`python3 process_datasets.py -a` (only use -a when you need to update the models)
-
-## Share files online (using transfer.sh)
-
-`curl --upload-file raw_data.tsv https://transfer.sh/recipe_raw_data`
+`curl -F 'file=@kaggle_epi_dataset.csv' https:/0x0.st`
+Returns a url to download it: `https://0x0.st/zQIn.csv`
+To download: simply do `curl https://0x0.st/zQIn.csv -o [output file name]`
 
 ## Run the API endpoint
 
@@ -31,3 +29,11 @@ Add Body sample:
     "content":"fried noodles"
 }
 ```
+
+## To test Rojak Search manually
+```python
+from Rojak import Rojak
+rojak = Rojak()
+rojak.search("spicy curry chicken with vegetable")
+```
+Returns array with at max 10 dishes `[...]`
