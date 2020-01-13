@@ -6,9 +6,8 @@ python_command="python"
 pip_command="pip"
 version="3"
 
-# This should be updated to some url in a domain
-# where we host this ourselves in the future.
-data_url="https://0x0.st/zQIn.csv"
+# Source: https://eightportions.com/datasets/Recipes/
+data_url="https://storage.googleapis.com/recipe-box/recipes_raw.zip"
 
 function checkVersion () {
     case "$($1 --version)" in
@@ -47,8 +46,9 @@ function full () {
     echo -e "Running the ${RED}full${NC} setup (including building the model)"
     main
     mkdir data
-    curl $data_url -o data/kaggle_epi_dataset.csv
-    $python_command process_datasets.py -a
+    curl $data_url -o data/recipes_raw.zip
+    unzip data/recipes_raw.zip -d data
+    rm data/recipes_raw.zip
 }
 
 function short () {
