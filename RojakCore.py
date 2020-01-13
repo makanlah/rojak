@@ -78,7 +78,6 @@ class KnowledgeGraph():
         return res
 
     def search(self, query: str):
-        query = "Chicken Pie with Biscuit Crust"
         keywords = self.__clean_query_to_list(query)
         top_x_results = self.__get_recipes(keywords)
         return self.__convert_object_to_json(top_x_results)
@@ -164,7 +163,6 @@ def create_dataframe(list_of_json_dish: List[str]) -> pd.DataFrame:
     # pandas convert to dataframe
     df = pd.read_json(json.dumps(list_of_json_dish))
     logging.debug("Number of recipes: {}".format(len(df)))
-    # df.dropna(inplace=True)
 
     # filter blacklist words in ingredients
     df['ingredients'] = clean_ingredients(df['ingredients'].tolist())
